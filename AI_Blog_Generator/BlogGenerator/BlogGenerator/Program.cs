@@ -76,7 +76,7 @@ builder.Services.AddScoped<IPlanService, PlanService>();
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAIBlogService, AIBlogService>();
-builder.Services.AddScoped<IAIProviderService, AIProviderService>();
+builder.Services.AddHttpClient<IAIProviderService, AIProviderService>();
 
 var app = builder.Build();
 
