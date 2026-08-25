@@ -711,7 +711,8 @@
   "tone": "Professional",
   "audience": "Students",
   "categoryId": 1,
-  "wordCount": 1000
+  "wordCount": 1000,
+  "Language":"English",
 }
 ```
 
@@ -777,6 +778,10 @@
 **Endpoint:** `POST /api/blogs/{blogId}/expand`
 **Authorization:** User
 
+request :{
+"instructions":"xyz...."//optional
+}
+
 **Success Response**
 
 ```json
@@ -799,6 +804,10 @@
 **Endpoint:** `POST /api/blogs/{blogId}/shorten`
 **Authorization:** User
 
+request :{
+"instructions":"xyz...."//optional
+}
+
 **Success Response**
 
 ```json
@@ -820,6 +829,10 @@
 
 **Endpoint:** `POST /api/blogs/{blogId}/generate-image`
 **Authorization:** User
+
+request :{
+"prompt":"xyz...."//optional
+}
 
 **Success Response**
 

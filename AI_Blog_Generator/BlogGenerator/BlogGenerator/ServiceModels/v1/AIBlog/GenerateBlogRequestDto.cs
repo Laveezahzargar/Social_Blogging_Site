@@ -1,3 +1,6 @@
+
+using BlogGenerator.Enums;
+
 namespace BlogGenerator.ServiceModels.v1.AIBlog;
 
 public class GenerateBlogRequestDto
@@ -12,5 +15,5 @@ public class GenerateBlogRequestDto
 
     public int WordCount { get; set; }
 
-    public string? Language { get; set; }
+    public BlogLanguage Language { get; set; } = BlogLanguage.English;
 }

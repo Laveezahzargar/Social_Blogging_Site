@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using BlogGenerator.DAL;
 using BlogGenerator.BAL;
 using BlogGenerator.Foundation.Middlewares;
+using BlogGenerator.Interfaces;
+using BlogGenerator.BAL;
 using Serilog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -77,6 +79,9 @@ builder.Services.AddScoped<IPlanService, PlanService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAIBlogService, AIBlogService>();
 builder.Services.AddHttpClient<IAIProviderService, AIProviderService>();
+
+builder.Services.AddScoped<IImageStorageService,CloudinaryImageStorageService>();
+builder.Services.AddScoped<IPublicFeedService, PublicFeedService>();
 
 var app = builder.Build();
 

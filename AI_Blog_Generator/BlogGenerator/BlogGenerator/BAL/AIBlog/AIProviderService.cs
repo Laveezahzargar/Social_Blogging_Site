@@ -100,109 +100,48 @@ public class AIProviderService : IAIProviderService
 
     private async Task<string> SendAIRequestAsync(string prompt)
     {
-        var apiKey = _configuration["OpenAI:ApiKey"];
-        var model = _configuration["OpenAI:Model"] ?? "gpt-4o-mini";
+        var apiKey = _configuration["Gemini:ApiKey"];
+        var model = _configuration["Gemini:Model"];
 
         if (string.IsNullOrWhiteSpace(apiKey))
         {
             throw new InvalidOperationException(
-                "OpenAI API key is not configured.");
+                "Gemini API key is not configured.");
+        }
+
+        if (string.IsNullOrWhiteSpace(model))
+        {
+            throw new InvalidOperationException(
+                "Gemini model is not configured.");
         }
 
         var requestBody = new
         {
-            model = model,
-            messages = new[]
+            contents = new[]
             {
-                new
+            new
+            {
+                parts = new[]
                 {
-                    role = "system",
-                    content =
-                        "You are a professional AI blog writing assistant."
-                },
-                new
-                {
-                    role = "user",
-                    content = prompt
+                    new
+                    {
+                        text = prompt
+                    }
                 }
-            },
-            temperature = 0.7
+            }
+        }
         };
 
         var json = JsonSerializer.Serialize(requestBody);
 
-        using var request = new HttpRequestMessage(
-            HttpMethod.Post,
-            "https://api.openai.com/v1/chat/completions");
-
-        request.Headers.Authorization =
-            new AuthenticationHeaderValue("Bearer", apiKey);
-
-        request.Content = new StringContent(
-            json,
-            Encoding.UTF8,
-            "application/json");
-
-        var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-
-        if (!response.IsSuccessStatusCode)
-        {
-            _logger.LogError(
-                "OpenAI API request failed. Status: {StatusCode}, Response: {Response}",
-                response.StatusCode,
-                responseContent);
-
-            throw new HttpRequestException(
-                $"AI provider request failed: {response.StatusCode}");
-        }
-
-        using var document =
-            JsonDocument.Parse(responseContent);
-
-        var result =
-            document.RootElement
-                .GetProperty("choices")[0]
-                .GetProperty("message")
-                .GetProperty("content")
-                .GetString();
-
-        if (string.IsNullOrWhiteSpace(result))
-        {
-            throw new InvalidOperationException(
-                "AI provider returned an empty response.");
-        }
-
-        return result.Trim();
-    }
-
-    private async Task<string> GenerateImageRequestAsync(
-        string prompt)
-    {
-        var apiKey = _configuration["OpenAI:ApiKey"];
-
-        if (string.IsNullOrWhiteSpace(apiKey))
-        {
-            throw new InvalidOperationException(
-                "OpenAI API key is not configured.");
-        }
-
-        var requestBody = new
-        {
-            model = "gpt-image-1",
-            prompt = prompt,
-            size = "1024x1024"
-        };
-
-        var json = JsonSerializer.Serialize(requestBody);
+        var url =
+            $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent";
 
         using var request = new HttpRequestMessage(
             HttpMethod.Post,
-            "https://api.openai.com/v1/images/generations");
+            url);
 
-        request.Headers.Authorization =
-            new AuthenticationHeaderValue("Bearer", apiKey);
+        request.Headers.Add("x-goog-api-key", apiKey);
 
         request.Content = new StringContent(
             json,
@@ -217,29 +156,111 @@ public class AIProviderService : IAIProviderService
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError(
-                "OpenAI image generation failed. Status: {StatusCode}, Response: {Response}",
+                "Gemini API request failed. Status: {StatusCode}, Response: {Response}",
                 response.StatusCode,
                 responseContent);
 
             throw new HttpRequestException(
-                $"AI image generation failed: {response.StatusCode}");
+                $"Gemini API request failed: {response.StatusCode}. " +
+                $"Details: {responseContent}");
         }
 
         using var document =
             JsonDocument.Parse(responseContent);
 
-        var imageUrl =
-            document.RootElement
-                .GetProperty("data")[0]
-                .GetProperty("url")
-                .GetString();
+        var outputText = document.RootElement
+            .GetProperty("candidates")[0]
+            .GetProperty("content")
+            .GetProperty("parts")[0]
+            .GetProperty("text")
+            .GetString();
 
-        if (string.IsNullOrWhiteSpace(imageUrl))
+        if (string.IsNullOrWhiteSpace(outputText))
         {
             throw new InvalidOperationException(
-                "AI provider did not return an image URL.");
+                "Gemini returned an empty response.");
         }
 
-        return imageUrl;
+        return outputText.Trim();
+    }
+
+    private async Task<string> GenerateImageRequestAsync(string prompt)
+    {
+        var accountId = _configuration["Cloudflare:AccountId"];
+        var apiToken = _configuration["Cloudflare:ApiToken"];
+
+        if (string.IsNullOrWhiteSpace(accountId))
+        {
+            throw new InvalidOperationException(
+                "Cloudflare Account ID is not configured.");
+        }
+
+        if (string.IsNullOrWhiteSpace(apiToken))
+        {
+            throw new InvalidOperationException(
+                "Cloudflare API token is not configured.");
+        }
+
+        var endpoint =
+            $"https://api.cloudflare.com/client/v4/accounts/" +
+            $"{accountId}/ai/run/@cf/black-forest-labs/flux-1-schnell";
+
+        var requestBody = new
+        {
+            prompt = prompt,
+            steps = 4
+        };
+
+        var json = JsonSerializer.Serialize(requestBody);
+
+        using var request = new HttpRequestMessage(
+            HttpMethod.Post,
+            endpoint);
+
+        request.Headers.Authorization =
+            new AuthenticationHeaderValue(
+                "Bearer",
+                apiToken);
+
+        request.Content = new StringContent(
+            json,
+            Encoding.UTF8,
+            "application/json");
+
+        var response = await _httpClient.SendAsync(request);
+
+        var responseContent =
+            await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError(
+                "Cloudflare image generation failed. " +
+                "Status: {StatusCode}, Response: {Response}",
+                response.StatusCode,
+                responseContent);
+
+            throw new HttpRequestException(
+                $"Cloudflare image generation failed: " +
+                $"{response.StatusCode}. " +
+                $"Details: {responseContent}");
+        }
+
+        using var document =
+            JsonDocument.Parse(responseContent);
+
+        var imageBase64 =
+            document.RootElement
+                .GetProperty("result")
+                .GetProperty("image")
+                .GetString();
+
+        if (string.IsNullOrWhiteSpace(imageBase64))
+        {
+            throw new InvalidOperationException(
+                "Cloudflare did not return an image.");
+        }
+
+        return imageBase64;
     }
 }

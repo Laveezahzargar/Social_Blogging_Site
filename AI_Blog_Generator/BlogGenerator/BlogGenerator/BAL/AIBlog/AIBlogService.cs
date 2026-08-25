@@ -2,8 +2,11 @@ using BlogGenerator.DAL;
 using BlogGenerator.Enums;
 using BlogGenerator.Interfaces;
 using BlogGenerator.ServiceModels.v1.AIBlog;
-using BlogEntity = BlogGenerator.DomainModels.v1;
+using BlogGenerator.DomainModels.v1;
 using Microsoft.EntityFrameworkCore;
+using BlogGenerator.Interfaces;
+
+using BlogEntity = BlogGenerator.DomainModels.v1.Blog;
 
 namespace BlogGenerator.BAL;
 
@@ -12,14 +15,18 @@ public class AIBlogService : IAIBlogService
     private readonly ApplicationDbContext _context;
     private readonly IAIProviderService _aiProvider;
     private readonly ILogger<AIBlogService> _logger;
+    private readonly IImageStorageService _imageStorageService;
 
     public AIBlogService(
         ApplicationDbContext context,
         IAIProviderService aiProvider,
-        ILogger<AIBlogService> logger)
+        IImageStorageService imageStorageService,
+        ILogger<AIBlogService> logger
+        )
     {
         _context = context;
         _aiProvider = aiProvider;
+        _imageStorageService = imageStorageService;
         _logger = logger;
     }
 
@@ -65,7 +72,7 @@ public class AIBlogService : IAIBlogService
 
         var title = request.Topic.Trim();
 
-        var blog = new Blog
+        var blog = new BlogEntity
         {
             UserId = userId,
             CategoryId = request.CategoryId,
@@ -78,7 +85,7 @@ public class AIBlogService : IAIBlogService
             Audience = request.Audience,
             WordCount = CountWords(content),
             CreditsUsed = creditsRequired,
-            Language = ParseLanguage(request.Language),
+            Language = request.Language,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -283,9 +290,9 @@ public class AIBlogService : IAIBlogService
     // =========================================================
 
     public async Task<GenerateImageResponseDto> GenerateImageAsync(
-        int userId,
-        int blogId,
-        GenerateImageRequestDto? request)
+    int userId,
+    int blogId,
+    GenerateImageRequestDto? request)
     {
         var blog = await GetUserBlogAsync(userId, blogId);
         var user = await GetUserAsync(userId);
@@ -300,12 +307,25 @@ public class AIBlogService : IAIBlogService
             ? $"Create a professional blog cover image for: {blog.Title}"
             : request.Prompt;
 
-        var imageUrl =
+        // Generate a unique filename
+        var fileName =
+            $"blog_{blogId}_{Guid.NewGuid():N}.jpg";
+
+        // Cloudflare returns Base64 image data
+        var imageBase64 =
             await _aiProvider.GenerateImageAsync(prompt);
+
+        if (string.IsNullOrWhiteSpace(imageBase64))
+            throw new InvalidOperationException(
+                "AI provider did not return an image.");
+
+        // Upload Base64 image to Cloudinary
+        var imageUrl = await _imageStorageService
+     .UploadImageAsync(imageBase64, fileName);
 
         if (string.IsNullOrWhiteSpace(imageUrl))
             throw new InvalidOperationException(
-                "AI provider did not return an image.");
+                "Image storage service did not return an image URL.");
 
         user.AvailableCredits -= creditsRequired;
 
@@ -417,16 +437,12 @@ public class AIBlogService : IAIBlogService
     // =========================================================
 
     public async Task<GenerateBlogResponseDto> TranslateBlogAsync(
-        int userId,
-        int blogId,
-        TranslateBlogRequestDto request)
+    int userId,
+    int blogId,
+    TranslateBlogRequestDto request)
     {
-        if (request == null ||
-            string.IsNullOrWhiteSpace(request.Language))
-        {
-            throw new ArgumentException(
-                "Target language is required.");
-        }
+        if (request == null)
+            throw new ArgumentNullException(nameof(request));
 
         var blog = await GetUserBlogAsync(userId, blogId);
         var user = await GetUserAsync(userId);
@@ -439,7 +455,7 @@ public class AIBlogService : IAIBlogService
 
         var content = await _aiProvider.TranslateBlogAsync(
             blog.Content,
-            request.Language);
+            request.Language.ToString());
 
         if (string.IsNullOrWhiteSpace(content))
             throw new InvalidOperationException(
@@ -451,7 +467,7 @@ public class AIBlogService : IAIBlogService
         blog.CreditsUsed += creditsRequired;
         blog.UpdatedAt = DateTime.UtcNow;
 
-        blog.Language = ParseLanguage(request.Language);
+        blog.Language = request.Language;
 
         user.AvailableCredits -= creditsRequired;
 
@@ -496,25 +512,68 @@ public class AIBlogService : IAIBlogService
             throw new InvalidOperationException(
                 "AI provider returned no tags.");
 
-        var tags = result
-            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+        // Parse and clean tags
+        var tagNames = result
+            .Split(
+                ',',
+                StringSplitOptions.RemoveEmptyEntries)
             .Select(x => x.Trim())
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        user.AvailableCredits -= creditsRequired;
+        if (!tagNames.Any())
+            throw new InvalidOperationException(
+                "No valid tags were generated.");
 
-        // Tag persistence requires your exact Tags entity.
-        // We will add BlogTags records here once the Tags model
-        // is confirmed.
+        // Remove existing tags associated with this blog
+        var existingBlogTags = await _context.BlogTags
+            .Where(x => x.BlogId == blogId)
+            .ToListAsync();
+
+        if (existingBlogTags.Any())
+        {
+            _context.BlogTags.RemoveRange(existingBlogTags);
+        }
+
+        // Add generated tags
+        foreach (var tagName in tagNames)
+        {
+            var tag = await _context.Tags
+                .FirstOrDefaultAsync(x =>
+                    x.Name.ToLower() == tagName.ToLower());
+
+            if (tag == null)
+            {
+                tag = new Tags
+                {
+                    Name = tagName,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.Tags.Add(tag);
+
+                // Save so TagId is generated
+                await _context.SaveChangesAsync();
+            }
+
+            var blogTag = new BlogTags
+            {
+                BlogId = blogId,
+                TagId = tag.TagId
+            };
+
+            _context.BlogTags.Add(blogTag);
+        }
+
+        user.AvailableCredits -= creditsRequired;
 
         await _context.SaveChangesAsync();
 
         return new GenerateTagsResponseDto
         {
             BlogId = blogId,
-            Tags = tags
+            Tags = tagNames
         };
     }
 
@@ -542,7 +601,7 @@ public class AIBlogService : IAIBlogService
             throw new InvalidOperationException(
                 "AI provider returned empty summary.");
 
-        blog.Excerpt = summary;
+        blog.Excerpt = CreateExcerpt(summary);
         blog.UpdatedAt = DateTime.UtcNow;
 
         user.AvailableCredits -= creditsRequired;
@@ -561,13 +620,23 @@ public class AIBlogService : IAIBlogService
     // =========================================================
 
     public async Task<List<TagDto>> GetTagsAsync(
-        int userId,
-        int blogId)
+    int userId,
+    int blogId)
     {
+        // Verify that the blog belongs to the logged-in user
         await GetUserBlogAsync(userId, blogId);
 
-        // Complete this after confirming your Tags entity.
-        throw new NotImplementedException();
+        var tags = await _context.BlogTags
+            .Where(x => x.BlogId == blogId)
+            .Select(x => new TagDto
+            {
+                TagId = x.Tag.TagId,
+                Name = x.Tag.Name
+            })
+            .OrderBy(x => x.Name)
+            .ToListAsync();
+
+        return tags;
     }
 
     // =========================================================
@@ -631,7 +700,7 @@ public class AIBlogService : IAIBlogService
             Target Audience: {request.Audience}
             Tone: {request.Tone}
             Word Count: approximately {request.WordCount} words.
-            Language: {request.Language ?? "English"}
+            Language: {request.Language}
 
             Create engaging, original and well-structured content.
             Include an appropriate introduction, meaningful sections,
@@ -672,18 +741,5 @@ public class AIBlogService : IAIBlogService
                 .Split(
                     ' ',
                     StringSplitOptions.RemoveEmptyEntries));
-    }
-
-    private static BlogLanguage ParseLanguage(string? language)
-    {
-        if (string.IsNullOrWhiteSpace(language))
-            return BlogLanguage.English;
-
-        return Enum.TryParse<BlogLanguage>(
-            language,
-            true,
-            out var result)
-            ? result
-            : BlogLanguage.English;
     }
 }
