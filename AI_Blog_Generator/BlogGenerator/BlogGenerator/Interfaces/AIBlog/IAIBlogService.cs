@@ -52,4 +52,7 @@ public interface IAIBlogService
     Task<List<TagDto>> GetTagsAsync(
         int userId,
         int blogId);
+    Task<bool> PublishBlogAsync(
+        int userId,
+        int blogId);
 }

@@ -73,22 +73,32 @@ public class AIBlogService : IAIBlogService
         var title = request.Topic.Trim();
 
         var blog = new BlogEntity
-        {
-            UserId = userId,
-            CategoryId = request.CategoryId,
-            Title = title,
-            Slug = GenerateSlug(title),
-            Prompt = request.Topic,
-            Content = content,
-            Excerpt = CreateExcerpt(content),
-            Tone = request.Tone,
-            Audience = request.Audience,
-            WordCount = CountWords(content),
-            CreditsUsed = creditsRequired,
-            Language = request.Language,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+{
+    UserId = userId,
+    CategoryId = request.CategoryId,
+
+    Title = title,
+    Slug = GenerateSlug(title),
+
+    Prompt = request.Topic,
+    Content = content,
+    Excerpt = CreateExcerpt(content),
+
+    Tone = request.Tone,
+    Audience = request.Audience,
+
+    WordCount = CountWords(content),
+    CreditsUsed = creditsRequired,
+    Language = request.Language,
+
+    Status = BlogStatus.Draft,
+    Visibility = BlogVisibility.Private,
+
+    PublishedAt = null,
+
+    CreatedAt = DateTime.UtcNow,
+    UpdatedAt = DateTime.UtcNow
+};
 
         user.AvailableCredits -= creditsRequired;
 
@@ -640,6 +650,35 @@ public class AIBlogService : IAIBlogService
     }
 
     // =========================================================
+    // 12. PUBLISH BLOG
+    // =========================================================
+
+    public async Task<bool> PublishBlogAsync(
+        int userId,
+        int blogId)
+    {
+        var blog = await GetUserBlogAsync(userId, blogId);
+
+        if (blog.Status == BlogStatus.Published)
+            throw new InvalidOperationException(
+                "Blog is already published.");
+
+        blog.Status = BlogStatus.Published;
+        blog.Visibility = BlogVisibility.Public;
+        blog.PublishedAt = DateTime.UtcNow;
+        blog.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation(
+            "Blog {BlogId} published by user {UserId}.",
+            blogId,
+            userId);
+
+        return true;
+    }
+
+    // =========================================================
     // HELPER METHODS
     // =========================================================
 
@@ -742,4 +781,6 @@ public class AIBlogService : IAIBlogService
                     ' ',
                     StringSplitOptions.RemoveEmptyEntries));
     }
+
+
 }

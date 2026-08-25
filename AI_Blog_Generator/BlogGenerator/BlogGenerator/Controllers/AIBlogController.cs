@@ -142,4 +142,27 @@ public class AIBlogController : ControllerBase
 
         return Ok(result);
     }
+
+    // =========================================================
+    // 12. PUBLISH BLOG
+    // POST /api/blogs/{blogId}/publish
+    // =========================================================
+
+    [HttpPost("{blogId:int}/publish")]
+    [Authorize]
+    public async Task<IActionResult> PublishBlog(
+        int blogId)
+    {
+        var userId = GetUserId();
+
+        var result = await _aiBlogService.PublishBlogAsync(
+            userId,
+            blogId);
+
+        return Ok(new
+        {
+            Success = result,
+            Message = "Blog published successfully."
+        });
+    }
 }

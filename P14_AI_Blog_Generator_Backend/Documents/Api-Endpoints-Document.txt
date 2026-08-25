@@ -55,6 +55,7 @@ POST	     /api/blogs/{blogId}/generate-tags	        Generate SEO tags/keywords f
 POST	     /api/blogs/{blogId}/generate-summary	Generate a short summary/excerpt for the blog
 
 GET          /api/blogs/{blogId}/tags                   Get SEO tags for Blog
+POST         /api/blogs/{blogId}/publish                Publish a blog
 
 
 4. Blog Management APIs:
