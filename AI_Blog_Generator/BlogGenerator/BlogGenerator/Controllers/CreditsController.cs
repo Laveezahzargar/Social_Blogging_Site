@@ -8,7 +8,7 @@ using BlogGenerator.ServiceModels.v1.Foundation;
 namespace BlogGenerator.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[Controller]")]
 [Authorize]
 public class CreditsController : ControllerBase
 {

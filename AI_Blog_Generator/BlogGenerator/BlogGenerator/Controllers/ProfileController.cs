@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace BlogGenerator.Controllers;
 
 [ApiController]
-[Route("api/profile")]
+[Route("api/v1/[Controller]")]
 [Authorize]
 public class ProfileController : ControllerBase
 {

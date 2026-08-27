@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogGenerator.Controllers
 {
     [ApiController]
-    [Route("api/auth")]
+    [Route("api/v1/[Controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;

@@ -7,7 +7,8 @@ using System.Security.Claims;
 namespace BlogGenerator.Controllers;
 
 [ApiController]
-[Route("api/blogs")]
+//[Route("api/blogs")]
+[Route("api/v1/[Controller]")]
 [Authorize]
 public class AIBlogController : ControllerBase
 {

@@ -7,7 +7,7 @@ using BlogGenerator.Interfaces;
 namespace BlogGenerator.Controllers;
 
 [ApiController]
-[Route("api/plans")]
+[Route("api/v1/[Controller]")]
 [Authorize]
 public class PlansController : ControllerBase
 {

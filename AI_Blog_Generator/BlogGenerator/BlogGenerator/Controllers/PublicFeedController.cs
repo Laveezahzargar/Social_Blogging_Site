@@ -6,7 +6,7 @@ using System.Security.Claims;
 namespace BlogGenerator.Controllers;
 
 [ApiController]
-[Route("api/feed")]
+[Route("api/v1/[Controller]")]
 public class PublicFeedController : ControllerBase
 {
     private readonly IPublicFeedService _feedService;

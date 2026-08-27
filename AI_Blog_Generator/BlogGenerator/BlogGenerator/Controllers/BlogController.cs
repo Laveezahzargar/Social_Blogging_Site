@@ -9,7 +9,7 @@ namespace BlogGenerator.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("api/blogs")]
+[Route("api/v1/[Controller]")]
 public class BlogsController : ControllerBase
 {
     private readonly IBlogService _blogService;

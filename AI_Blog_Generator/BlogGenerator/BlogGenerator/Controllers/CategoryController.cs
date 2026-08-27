@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogGenerator.Controllers;
 
 [ApiController]
-[Route("api/categories")]
+[Route("api/v1/[Controller]")]
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;
