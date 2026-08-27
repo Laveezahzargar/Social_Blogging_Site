@@ -1,0 +1,17 @@
+controller routes                                                         ✅
+db scripts send                                                           ✅
+postman collection push                                                   ✅
+admin approval for publishing blogs                                       🟡#
+keyword restrictions for publish blogs likes comments etc                 🟡$
+role = guest lock all even public endpoints                               🟡%
+privatize image url                                                       ❌
+image url base64 - admin approval restrict unrelated prompt               🟡
+
+
+
+# user generates blog --> keyword restriction is implemented(can't write forbidden words in instructions/while editing)-->AI scanning of generated content to check for violatory content --> if user is new for 1st, 2nd and 3rd blog admin approval is needed otherwise afterwards user is given trusted badge and no further admin approvals for publishing is needed --> although reported content is reviewed and removed or kept by admin
+
+$ user can't write forbidden keywords in comments, comment-replies
+
+% guest user is statically added to db wd credentials by admin and everytime someone visits website and isn't logged in will be assigned those credentials of guest user and a token will be generated and sent on basis of it so that even public endpoints should only be opened /accessible via our website 
+

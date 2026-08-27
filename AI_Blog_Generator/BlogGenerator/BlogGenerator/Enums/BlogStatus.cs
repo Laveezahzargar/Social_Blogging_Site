@@ -3,6 +3,8 @@
     public enum BlogStatus
     {
         Draft,
-        Published
+        PendingApproval,
+        Published,
+        Rejected
     }
 }

@@ -60,6 +60,20 @@ namespace BlogGenerator.Controllers
             });
         }
 
+        [HttpPost("guest")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GenerateGuestToken()
+        {
+            var result = await _authService.GenerateGuestTokenAsync();
+
+            return Ok(new ApiResponse<AuthResponseDto>
+            {
+                Success = true,
+                Message = "Guest token generated successfully.",
+                Data = result
+            });
+        }
+
         [HttpPost("logout")]
         [Authorize]
         public async Task<IActionResult> Logout([FromBody] LogoutRequestDto request)

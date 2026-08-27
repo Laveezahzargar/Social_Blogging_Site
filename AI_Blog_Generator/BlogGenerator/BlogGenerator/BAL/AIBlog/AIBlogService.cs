@@ -654,28 +654,103 @@ public class AIBlogService : IAIBlogService
     // =========================================================
 
     public async Task<bool> PublishBlogAsync(
-        int userId,
-        int blogId)
+      int userId,
+      int blogId)
     {
         var blog = await GetUserBlogAsync(userId, blogId);
 
+        // Already published
         if (blog.Status == BlogStatus.Published)
             throw new InvalidOperationException(
                 "Blog is already published.");
 
-        blog.Status = BlogStatus.Published;
-        blog.Visibility = BlogVisibility.Public;
-        blog.PublishedAt = DateTime.UtcNow;
-        blog.UpdatedAt = DateTime.UtcNow;
+        // Already waiting for admin
+        if (blog.Status == BlogStatus.PendingApproval)
+            throw new InvalidOperationException(
+                "Blog is already pending admin approval.");
 
-        await _context.SaveChangesAsync();
+        // Rejected blogs cannot be published again
+        if (blog.Status == BlogStatus.Rejected)
+            throw new InvalidOperationException(
+                "This blog was rejected and cannot be published.");
 
-        _logger.LogInformation(
-            "Blog {BlogId} published by user {UserId}.",
-            blogId,
-            userId);
+        // ---------------------------------------------------------
+        // Check Trusted badge
+        // ---------------------------------------------------------
 
-        return true;
+        var isTrusted = await _context.UserBadges
+            .AnyAsync(x =>
+                x.UserId == userId &&
+                x.Badge.Name == "Trusted");
+
+        if (isTrusted)
+        {
+            // Trusted users can publish directly.
+            blog.Status = BlogStatus.Published;
+            blog.Visibility = BlogVisibility.Public;
+            blog.PublishedAt = DateTime.UtcNow;
+            blog.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Trusted user {UserId} published blog {BlogId}.",
+                userId,
+                blogId);
+
+            return true;
+        }
+
+        // ---------------------------------------------------------
+        // Count user's approved/published blogs
+        // ---------------------------------------------------------
+
+        var approvedBlogCount = await _context.Blogs
+            .CountAsync(x =>
+                x.UserId == userId &&
+                x.Status == BlogStatus.Published);
+
+        // ---------------------------------------------------------
+        // First 3 blogs require admin approval
+        // ---------------------------------------------------------
+
+        if (approvedBlogCount < 3)
+        {
+            blog.Status = BlogStatus.PendingApproval;
+
+            // It must not appear publicly while waiting.
+            blog.Visibility = BlogVisibility.Private;
+
+            blog.PublishedAt = null;
+            blog.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Blog {BlogId} submitted for admin approval by user {UserId}. " +
+                "Approved blogs: {ApprovedCount}",
+                blogId,
+                userId,
+                approvedBlogCount);
+
+            return true;
+        }
+
+        /*
+         * IMPORTANT:
+         *
+         * At this point the user has 3 approved blogs,
+         * but if the Trusted badge has not yet been awarded,
+         * this should normally be handled by the admin approval
+         * process of the third blog.
+         *
+         * We do NOT award the badge here.
+         */
+
+        throw new InvalidOperationException(
+            "Your account is eligible for Trusted status, " +
+            "but the Trusted badge has not yet been assigned. " +
+            "Please contact an administrator.");
     }
 
     // =========================================================

@@ -7,6 +7,7 @@ POST	     /api/auth/register				Register a new user (token generation)
 POST	     /api/auth/login				Login user and return JWT & Refresh Token
 POST	     /api/auth/refresh-token			Generate a new JWT using Refresh Token
 POST	     /api/auth/logout				Logout user and revoke refresh token
+POST 	     /api/auth/guest                            Guest User Gets API/jwt
 
 
 2. User Profile APIs:

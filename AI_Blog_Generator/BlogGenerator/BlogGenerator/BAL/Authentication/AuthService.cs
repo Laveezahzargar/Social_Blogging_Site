@@ -223,6 +223,48 @@ public class AuthService : IAuthService
        
     }
 
+    public async Task<AuthResponseDto> GenerateGuestTokenAsync()
+    {
+        var guestUser = await _context.Users
+            .FirstOrDefaultAsync(x => x.Role == UserRole.Guest);
+
+        if (guestUser == null)
+        {
+            _logger.LogError("Guest user was not found in the database.");
+
+            throw new NotFoundException(
+                "Guest user is not configured.");
+        }
+
+        if (guestUser.IsDeleted || !guestUser.IsActive)
+        {
+            _logger.LogError(
+                "Guest user is inactive or deleted. UserId: {UserId}",
+                guestUser.UserId);
+
+            throw new UnauthorizedException(
+                "Guest access is currently unavailable.");
+        }
+
+        var accessToken = _jwtService.GenerateAccessToken(guestUser);
+
+        _logger.LogInformation(
+            "Guest access token generated. UserId: {UserId}",
+            guestUser.UserId);
+
+        return new AuthResponseDto
+        {
+            UserId = guestUser.UserId,
+            UserName = guestUser.UserName,
+            Email = guestUser.Email,
+            Role = guestUser.Role.ToString(),
+            AvailableCredits = guestUser.AvailableCredits,
+            AccessToken = accessToken,
+            RefreshToken = string.Empty,
+            ExpiresAt = _jwtService.GetAccessTokenExpiry()
+        };
+    }
+
     public async Task LogoutAsync(LogoutRequestDto request)
     {
         var refreshToken = await _refreshTokenService
