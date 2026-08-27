@@ -1,0 +1,1641 @@
+{
+  "info": {
+    "_postman_id": "3b0e11da-4a77-4f29-b359-19b210a3d882",
+    "name": "BlogGenerator(social blogging site)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55864067",
+    "_collection_link": "https://go.postman.co/collection/55864067-3b0e11da-4a77-4f29-b359-19b210a3d882?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"userName\": \"laveezah\",\r\n    \"email\": \"laveezah.renosoftware@outlook.com\",\r\n    \"password\": \"#Reno123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"token\", response.data.accessToken);\r",
+                  "pm.collectionVariables.set(\"refreshToken\", response.data.refreshToken);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"laveezah.renosoftware@outlook.com\",\r\n    \"password\": \"#Reno123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"RefreshToken\": \"Tri2SvMucPNFOZOHj3BKIRHFhqNVSuqc4cfKjNR0oj2npDWqeOStBdNb4th2idE3QTclxvX9MCYEn50fGJkPIA==\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/auth/refresh-token",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"RefreshToken\": \"7o4lH+24u/dHavkAh7eDleO3LL2/tL3ooHVxLZPVJTG5w9HIgohh2Fkm6CNwulrDtj+/8M0my/TKH+VKZrJG7Q==\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/auth/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Blog",
+      "item": [
+        {
+          "name": "Get Blogs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Blog by Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Blog Versions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/versions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "versions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Blog Images",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/images",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "images"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Download Blog Pdf",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/download-pdf",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "download-pdf"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Blog",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Image",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/images/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "images",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Publish Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/publish",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "publish"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unpublish Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/unpublish",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "unpublish"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update blog",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"The Art of Storytelling\",\r\n  \"content\": \"Every person reads a book differently because every reader brings their own experiences, perspectives, and emotions to the story. Storytelling is not only about the words on a page but also about everything that exists between the lines.\",\r\n  \"excerpt\": \"A reflection on storytelling, reading, and the unique journeys of every reader.\",\r\n  \"tone\": \"Reflective\",\r\n  \"audience\": \"General Readers\",\r\n  \"wordCount\": 85\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all Draft Blogs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/drafts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "drafts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all Published Blogs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/published",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "published"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Credit",
+      "item": [
+        {
+          "name": "Get Available Credits of User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/credits",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "credits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pricing",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/credits/pricing",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "credits",
+                "pricing"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Plan",
+      "item": [
+        {
+          "name": "Get All Plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/plans",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "plans"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Plan",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Name\": \"Standard\",\r\n    \"Description\": \"beginner frienndly \",\r\n    \"Price\": \"199\",\r\n    \"Credits\": \"100\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/plans",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "plans"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Plan",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Name\": \"Standard--001\",\r\n    \"Description\": \"beginner frienndly \",\r\n    \"Price\": \"199\",\r\n    \"Credits\": \"100\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/plans/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "plans",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Plan",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/plans/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "plans",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"userName\": \"laveezah-zargar\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/profile",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Profile Pic",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"pic\": \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/profile/upload-picture",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "upload-picture"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Profile Pic",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"pic\": \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/profile/picture",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "picture"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Profile",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"reason\": \"no longer using this application\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/profile",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "change password",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"CurrentPassword\": \"#Zeno123\",\r\n    \"NewPassword\":\"#Reno123\",\r\n    \"ConfirmNewPassword\":\"#Reno123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/profile/change-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Public Profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"CurrentPassword\": \"#Zeno123\",\r\n    \"NewPassword\":\"#Reno123\",\r\n    \"ConfirmNewPassword\":\"#Reno123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/profile/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User blogs",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"CurrentPassword\": \"#Zeno123\",\r\n    \"NewPassword\":\"#Reno123\",\r\n    \"ConfirmNewPassword\":\"#Reno123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/profile/2/blogs",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "2",
+                "blogs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Follow User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/3/follow",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "3",
+                "follow"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unfollow User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/3/follow",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "3",
+                "follow"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my Followers",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"CurrentPassword\": \"#Zeno123\",\r\n    \"NewPassword\":\"#Reno123\",\r\n    \"ConfirmNewPassword\":\"#Reno123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/profile/followers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "followers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my Following",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"CurrentPassword\": \"#Zeno123\",\r\n    \"NewPassword\":\"#Reno123\",\r\n    \"ConfirmNewPassword\":\"#Reno123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/profile/following",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "following"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User's Followers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/3/followers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "3",
+                "followers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User's Following",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/2/following",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "2",
+                "following"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Saved Blogs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/saved-blogs",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "saved-blogs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Liked Blogs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/liked-blogs",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "liked-blogs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/2/stats",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "2",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Activity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/activity",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "activity"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/search?searchTerm=la",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "la"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Suggestions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/suggestions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "suggestions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Badges",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/profile/2/badges",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "profile",
+                "2",
+                "badges"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "Get all categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/categories",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AIBlog",
+      "item": [
+        {
+          "name": "Generate Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"categoryId\": 2,\r\n  \"topic\": \"dead poets society\",\r\n  \"audience\": \"students\",\r\n  \"tone\": \"intriguing\",\r\n  \"wordCount\": 1000,\r\n  \"language\": 0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/generate",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "generate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Re-Generate Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/regenerate",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "regenerate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Expand Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"instructions\":\"focus on dystopian world that may create because of AI\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/expand",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "expand"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Shorten Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"instructions\":\"focus on dystopian world that may create because of AI\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/shorten",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "shorten"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generate Image",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"prompt\":\"create a human standing wd back side to us and a tall building in front of him depicting a new world full of flying machines and advanced stuff\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/generate-image",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "generate-image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get AI History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/ai-history",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "ai-history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rewrite Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"instructions\":\"focus on dystopian world that may create because of AI\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/rewrite",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "rewrite"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generate Tags",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/generate-tags",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "generate-tags"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generate Summary",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/generate-summary",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "generate-summary"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tags",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/tags",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "tags"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Publish Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/blogs/1/publish",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "blogs",
+                "1",
+                "publish"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Public Feed",
+      "item": [
+        {
+          "name": "Get Feed",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/feed",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "feed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Trending",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/feed/trending",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "feed",
+                "trending"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Following",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/feed/following",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "feed",
+                "following"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/feed/category/Technology",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "feed",
+                "category",
+                "Technology"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search by author, title, tag",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/feed/search?search=laveezah",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "feed",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "laveezah"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get published blog",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/feed/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "feed",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    }
+  ]
+}

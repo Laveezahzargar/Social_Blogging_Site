@@ -27,9 +27,9 @@ public class UserBadgeConfiguration : IEntityTypeConfiguration<UserBadges>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.Badge)
-            .WithMany()
-            .HasForeignKey(x => x.BadgeId)
-            .OnDelete(DeleteBehavior.Restrict);
+    .WithMany(x => x.UserBadges)
+    .HasForeignKey(x => x.BadgeId)
+    .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(x => new { x.UserId, x.BadgeId })
             .IsUnique();

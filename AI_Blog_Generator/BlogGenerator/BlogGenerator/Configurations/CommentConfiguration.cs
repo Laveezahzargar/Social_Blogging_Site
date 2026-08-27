@@ -33,9 +33,9 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comments>
         builder.Property(x => x.UpdatedAt);
 
         builder.HasOne(x => x.Blog)
-            .WithMany()
-            .HasForeignKey(x => x.BlogId)
-            .OnDelete(DeleteBehavior.Cascade);
+    .WithMany(x => x.Comments)
+    .HasForeignKey(x => x.BlogId)
+    .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.User)
             .WithMany()
@@ -43,8 +43,8 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comments>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.ParentComment)
-            .WithMany()
-            .HasForeignKey(x => x.ParentCommentId)
-            .OnDelete(DeleteBehavior.Restrict);
+    .WithMany(x => x.Replies)
+    .HasForeignKey(x => x.ParentCommentId)
+    .OnDelete(DeleteBehavior.Restrict);
     }
 }

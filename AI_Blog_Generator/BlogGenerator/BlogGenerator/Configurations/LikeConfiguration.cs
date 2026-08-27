@@ -22,9 +22,9 @@ public class LikeConfiguration : IEntityTypeConfiguration<Likes>
             .IsRequired();
 
         builder.HasOne(x => x.Blog)
-            .WithMany()
-            .HasForeignKey(x => x.BlogId)
-            .OnDelete(DeleteBehavior.Cascade);
+    .WithMany(x => x.Likes)
+    .HasForeignKey(x => x.BlogId)
+    .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.User)
             .WithMany()

@@ -25,9 +25,9 @@ public class RepostConfiguration : IEntityTypeConfiguration<Reposts>
             .IsRequired();
 
         builder.HasOne(x => x.Blog)
-            .WithMany()
-            .HasForeignKey(x => x.BlogId)
-            .OnDelete(DeleteBehavior.Cascade);
+    .WithMany(x => x.Reposts)
+    .HasForeignKey(x => x.BlogId)
+    .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.User)
             .WithMany()

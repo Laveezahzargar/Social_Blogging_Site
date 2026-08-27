@@ -30,10 +30,9 @@ public class BlogReportConfiguration : IEntityTypeConfiguration<BlogReports>
             .IsRequired();
 
         builder.HasOne(x => x.Blog)
-            .WithMany()
-            .HasForeignKey(x => x.BlogId)
-            .OnDelete(DeleteBehavior.Restrict);
-
+    .WithMany(x => x.BlogReports)
+    .HasForeignKey(x => x.BlogId)
+    .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(x => x.ReportedByUser)
             .WithMany()
             .HasForeignKey(x => x.ReportedByUserId)

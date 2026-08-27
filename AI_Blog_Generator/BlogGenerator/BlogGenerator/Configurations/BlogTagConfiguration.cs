@@ -24,9 +24,9 @@ public class BlogTagConfiguration : IEntityTypeConfiguration<BlogTags>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.Tag)
-            .WithMany()
-            .HasForeignKey(x => x.TagId)
-            .OnDelete(DeleteBehavior.Restrict);
+    .WithMany(x => x.BlogTags)
+    .HasForeignKey(x => x.TagId)
+    .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(x => new { x.BlogId, x.TagId })
             .IsUnique();

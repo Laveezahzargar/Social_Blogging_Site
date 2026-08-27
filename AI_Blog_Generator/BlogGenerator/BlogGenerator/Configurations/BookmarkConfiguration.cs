@@ -22,9 +22,9 @@ public class BookmarkConfiguration : IEntityTypeConfiguration<Bookmarks>
             .IsRequired();
 
         builder.HasOne(x => x.Blog)
-            .WithMany()
-            .HasForeignKey(x => x.BlogId)
-            .OnDelete(DeleteBehavior.Cascade);
+    .WithMany(x => x.Bookmarks)
+    .HasForeignKey(x => x.BlogId)
+    .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.User)
             .WithMany()
