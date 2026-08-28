@@ -137,7 +137,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"METHOD: {context.Request.Method}");
+    Console.WriteLine($"PATH: {context.Request.Path}");
+    Console.WriteLine($"ORIGIN: {context.Request.Headers["Origin"]}");
+
+    await next();
+});
 
 app.UseCors("AllowFrontend");
 
