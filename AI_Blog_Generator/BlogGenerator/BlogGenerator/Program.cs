@@ -1,23 +1,25 @@
-using Microsoft.EntityFrameworkCore;
-using BlogGenerator.DAL;
 using BlogGenerator.BAL;
+using BlogGenerator.BAL.Authentication;
+using BlogGenerator.BAL.Blog;
+using BlogGenerator.BAL.BlogInteraction;
+using BlogGenerator.BAL.Category;
+using BlogGenerator.BAL.Feedback;
+using BlogGenerator.BAL.Issue;
+using BlogGenerator.BAL.Notifications;
+using BlogGenerator.BAL.Profile;
+using BlogGenerator.DAL;
 using BlogGenerator.Foundation.Middlewares;
 using BlogGenerator.Interfaces;
-using BlogGenerator.BAL;
-using Serilog;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using BlogGenerator.Interfaces;
-using QuestPDF.Infrastructure;
 using BlogGenerator.Interfaces.Authentication;
-using BlogGenerator.BAL.Authentication;
-using BlogGenerator.Interfaces.Profile;
-using BlogGenerator.BAL.Profile;
-using BlogGenerator.BAL.Blog;
 using BlogGenerator.Interfaces.Blog;
+using BlogGenerator.Interfaces.Profile;
 using BlogGenerator.Services;
-using BlogGenerator.BAL.Category;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using QuestPDF.Infrastructure;
+using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +41,7 @@ builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 
-builder.Services.AddCors(options =>
+/*builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
@@ -47,6 +49,17 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
+    });
+});*/
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
@@ -120,6 +133,11 @@ builder.Services.AddHttpClient<IAIProviderService, AIProviderService>();
 
 builder.Services.AddScoped<IImageStorageService,CloudinaryImageStorageService>();
 builder.Services.AddScoped<IPublicFeedService, PublicFeedService>();
+
+builder.Services.AddScoped<IBlogInteractionService, BlogInteractionService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<IIssueService, IssueService>();
 
 var app = builder.Build();
 
