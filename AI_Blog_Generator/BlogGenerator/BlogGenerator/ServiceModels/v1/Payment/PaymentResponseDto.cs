@@ -1,8 +1,8 @@
 using BlogGenerator.Enums;
 
-namespace BlogGenerator.DomainModels.v1;
+namespace BlogGenerator.ServiceModels.v1;
 
-public class Payment
+public class PaymentResponseDto
 {
     public int PaymentId { get; set; }
 
@@ -14,19 +14,11 @@ public class Payment
 
     public int CreditsPurchased { get; set; }
 
-    // Razorpay identifiers
     public string RazorpayOrderId { get; set; } = string.Empty;
 
     public string? RazorpayPaymentId { get; set; }
 
-    public string? RazorpaySignature { get; set; }
-
     public PaymentStatus PaymentStatus { get; set; }
 
     public DateTime PurchasedAt { get; set; }
-
-    // Navigation Properties
-    public User User { get; set; } = null!;
-
-    public Plan Plan { get; set; } = null!;
 }

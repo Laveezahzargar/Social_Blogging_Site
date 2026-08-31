@@ -3,7 +3,7 @@ namespace BlogGenerator.Enums;
 public enum PaymentStatus
 {
     Pending,
-    Succeeded,
+    Completed,
     Failed,
     Cancelled
 }

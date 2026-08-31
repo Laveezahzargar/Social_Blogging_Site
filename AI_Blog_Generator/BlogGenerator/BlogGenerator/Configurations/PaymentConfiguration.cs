@@ -25,9 +25,21 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder.Property(x => x.CreditsPurchased)
             .IsRequired();
 
-        builder.Property(x => x.StripeTransactionId)
+        // =====================================================
+        // RAZORPAY FIELDS
+        // =====================================================
+
+        builder.Property(x => x.RazorpayOrderId)
             .IsRequired()
             .HasMaxLength(255);
+
+        builder.Property(x => x.RazorpayPaymentId)
+            .IsRequired(false)
+            .HasMaxLength(255);
+
+        builder.Property(x => x.RazorpaySignature)
+            .IsRequired(false)
+            .HasMaxLength(500);
 
         builder.Property(x => x.PaymentStatus)
             .IsRequired();
@@ -35,13 +47,19 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder.Property(x => x.PurchasedAt)
             .IsRequired();
 
-        // User → Payments
+        // =====================================================
+        // USER → PAYMENTS
+        // =====================================================
+
         builder.HasOne(x => x.User)
             .WithMany(x => x.Payments)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Plan → Payments
+        // =====================================================
+        // PLAN → PAYMENTS
+        // =====================================================
+
         builder.HasOne(x => x.Plan)
             .WithMany(x => x.Payments)
             .HasForeignKey(x => x.PlanId)
