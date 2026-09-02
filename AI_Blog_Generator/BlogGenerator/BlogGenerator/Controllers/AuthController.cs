@@ -8,6 +8,7 @@ namespace BlogGenerator.Controllers
 {
     [ApiController]
     [Route("api/v1/[Controller]")]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -75,7 +76,6 @@ namespace BlogGenerator.Controllers
         }
 
         [HttpPost("logout")]
-        [Authorize]
         public async Task<IActionResult> Logout([FromBody] LogoutRequestDto request)
         {
             await _authService.LogoutAsync(request);

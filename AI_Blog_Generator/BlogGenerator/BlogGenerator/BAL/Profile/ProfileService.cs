@@ -139,6 +139,12 @@ public class ProfileService : IProfileService
             await file.CopyToAsync(stream);
         }
 
+        if (!System.IO.File.Exists(filePath))
+        {
+            throw new BadRequestException(
+                "Profile picture could not be saved.");
+        }
+
         user.ProfilePictureUrl = $"/ProfilePictures/{fileName}";
         user.UpdatedAt = DateTime.UtcNow;
 
