@@ -71,7 +71,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5216/api/auth/login",
+              "raw": "http://localhost:5216/api/v1/auth/login",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -79,6 +79,7 @@
               "port": "5216",
               "path": [
                 "api",
+                "v1",
                 "auth",
                 "login"
               ]
@@ -500,7 +501,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5216/api/plans",
+              "raw": "http://localhost:5216/api/v1/plans",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -508,6 +509,7 @@
               "port": "5216",
               "path": [
                 "api",
+                "v1",
                 "plans"
               ]
             }
@@ -654,16 +656,19 @@
             "method": "POST",
             "header": [],
             "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"pic\": \r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/RenoSoftwares/Pictures/Screenshots/Screenshot 2026-07-16 111335.png"
+                  ]
                 }
-              }
+              ]
             },
             "url": {
-              "raw": "http://localhost:5216/api/profile/upload-picture",
+              "raw": "http://localhost:5216/api/v1/profile/upload-picture",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -671,6 +676,7 @@
               "port": "5216",
               "path": [
                 "api",
+                "v1",
                 "profile",
                 "upload-picture"
               ]
@@ -1292,25 +1298,15 @@
           "request": {
             "method": "POST",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"prompt\":\"create a human standing wd back side to us and a tall building in front of him depicting a new world full of flying machines and advanced stuff\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
-              "raw": "http://localhost:5216/api/blogs/1/generate-image",
-              "protocol": "http",
+              "raw": "{{}}/api/v1/AIBlog/1/generate-image",
               "host": [
-                "localhost"
+                "{{}}"
               ],
-              "port": "5216",
               "path": [
                 "api",
-                "blogs",
+                "v1",
+                "AIBlog",
                 "1",
                 "generate-image"
               ]
@@ -1347,7 +1343,12 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"instructions\":\"focus on dystopian world that may create because of AI\"\r\n}"
+              "raw": "{\r\n    \"Instructions\": \"Fictional world turns real\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "http://localhost:5216/api/blogs/1/rewrite",
@@ -1586,6 +1587,886 @@
                 "api",
                 "feed",
                 "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Blog Interaction",
+      "item": [
+        {
+          "name": "Like Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"laveezah.renosoftware@outlook.com\",\r\n    \"password\": \"#Reno123\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/blogs/1/like",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "blogs",
+                "1",
+                "like"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unlike Blog",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"laveezah.renosoftware@outlook.com\",\r\n    \"password\": \"#Reno123\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/blogs/1/like",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "blogs",
+                "1",
+                "like"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Blog likes",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"laveezah.renosoftware@outlook.com\",\r\n    \"password\": \"#Reno123\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/blogs/1/likes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "blogs",
+                "1",
+                "likes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Comment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\":\"abc\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/blogs/1/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "blogs",
+                "1",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Comments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/blogs/1/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "blogs",
+                "1",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Comment",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\":\"abcdef\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/comments/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "comments",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Comment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/comments/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "comments",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Save Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/blogs/1/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "blogs",
+                "1",
+                "save"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unsave Blog",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/blogs/1/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "blogs",
+                "1",
+                "save"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Repost Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/blogs/1/repost",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "blogs",
+                "1",
+                "repost"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Repost",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/blogs/1/repost",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "blogs",
+                "1",
+                "repost"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Report Blog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"reason\":0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/blogs/1/report",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "blogs",
+                "1",
+                "report"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Like Comment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"reason\":0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/comments/1/like",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "comments",
+                "1",
+                "like"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unlike Comment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"reason\":0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/bloginteraction/comments/1/like",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "bloginteraction",
+                "comments",
+                "1",
+                "like"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get All Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/notifications",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Notifications as read",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/notifications/1/read",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                "1",
+                "read"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark all as read",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/notifications/read-all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                "read-all"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Feedback",
+      "item": [
+        {
+          "name": "Submit Feedback",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"subject\": \"oiuytrew-\",\r\n    \"message\": \"123456789\",\r\n    \"rating\":4,\r\n    \"isPublic\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/feedback",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "feedback"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Feedbacks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/feedback",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "feedback"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Feedback By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/feedback/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "feedback",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Public Feedbacks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/feedback/public",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "feedback",
+                "public"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Issue",
+      "item": [
+        {
+          "name": "Create Issue",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"subject\":\"qwertyu\",\r\n    \"description\":\"qwertyuiolkjvgfc\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/issue",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "issue"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Issues",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/issue",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "issue"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Issue By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/issue/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "issue",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Issue",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"subject\":\"jyfytf\",\r\n    \"description\":\"67i7tyt\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/issue/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "issue",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Issue",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/issue/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "issue",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Issue Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/issue/1/status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "issue",
+                "1",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        {
+          "name": "Create Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"planId\":2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/payment/create-order",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "payment",
+                "create-order"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"paymentId\": 2,\r\n  \"razorpayOrderId\": \"order_xxxxxxxxx\",\r\n  \"razorpayPaymentId\": \"pay_xxxxxxxxx\",\r\n  \"razorpaySignature\": \"xxxxxxxxxxxxxxxx\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5216/api/v1/payment/verify",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "payment",
+                "verify"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/payment/history",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "payment",
+                "history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/payment/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "payment",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get WebHook",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/payment/webhook",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "payment",
+                "webhook"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5216/api/v1/payment/1/cancel",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5216",
+              "path": [
+                "api",
+                "v1",
+                "payment",
+                "1",
+                "cancel"
               ]
             }
           },

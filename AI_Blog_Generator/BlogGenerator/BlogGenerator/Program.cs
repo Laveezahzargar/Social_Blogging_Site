@@ -130,6 +130,8 @@ builder.Services.AddScoped<IIssueService, IssueService>();
 
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
+builder.Services.AddScoped<IAdminService, AdminService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

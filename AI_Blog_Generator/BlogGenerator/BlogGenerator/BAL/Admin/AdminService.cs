@@ -5,7 +5,7 @@ using BlogGenerator.ServiceModels.v1;
 using Microsoft.EntityFrameworkCore;
 using BlogGenerator.DAL;
 
-namespace BlogGenerator.BAL.Admin;
+namespace BlogGenerator.BAL;
 
 public class AdminService : IAdminService
 {
@@ -263,6 +263,17 @@ public class AdminService : IAdminService
         if (blog == null)
             return false;
 
+        // Delete reports associated with this blog
+        var reports = await _context.BlogReports
+            .Where(x => x.BlogId == blogId)
+            .ToListAsync();
+
+        if (reports.Any())
+        {
+            _context.BlogReports.RemoveRange(reports);
+        }
+
+        // Delete the blog
         _context.Blogs.Remove(blog);
 
         await _context.SaveChangesAsync();

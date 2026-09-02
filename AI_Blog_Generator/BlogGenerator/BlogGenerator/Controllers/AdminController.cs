@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogGenerator.Controllers;
 
 [ApiController]
-[Route("api/admin")]
+[Route("api/v1/[Controller]")]
 [Authorize(Roles = "Admin")]
 public class AdminController : ControllerBase
 {
