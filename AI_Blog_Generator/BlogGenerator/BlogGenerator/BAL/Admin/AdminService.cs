@@ -3,7 +3,6 @@ using BlogGenerator.Enums;
 using BlogGenerator.Interfaces;
 using BlogGenerator.ServiceModels.v1;
 using Microsoft.EntityFrameworkCore;
-using BlogGenerator.BAL;
 using BlogGenerator.DAL;
 
 namespace BlogGenerator.BAL.Admin;
@@ -38,7 +37,7 @@ public class AdminService : IAdminService
                 .CountAsync(),
 
             TotalRevenue = await _context.Payments
-                .Where(x => x.PaymentStatus == PaymentStatus.Succeeded)
+                .Where(x => x.PaymentStatus == PaymentStatus.Completed)
                 .SumAsync(x => (decimal?)x.Amount) ?? 0,
 
             TotalFeedback = await _context.Feedbacks
@@ -80,7 +79,11 @@ public class AdminService : IAdminService
                 Role = x.Role.ToString(),
                 ProfilePictureUrl = x.ProfilePictureUrl,
                 AvailableCredits = x.AvailableCredits,
-                IsActive = x.IsActive,
+
+                // User model uses IsActive.
+                // Blocked means the user is not active.
+                IsBlocked = !x.IsActive,
+
                 CreatedAt = x.CreatedAt
             })
             .ToListAsync();
@@ -105,7 +108,10 @@ public class AdminService : IAdminService
             Role = user.Role.ToString(),
             ProfilePictureUrl = user.ProfilePictureUrl,
             AvailableCredits = user.AvailableCredits,
-            IsActive = user.IsActive,
+
+            // User model uses IsActive.
+            IsBlocked = !user.IsActive,
+
             CreatedAt = user.CreatedAt,
 
             TotalBlogs = await _context.Blogs
@@ -134,10 +140,18 @@ public class AdminService : IAdminService
                 PaymentId = x.PaymentId,
                 UserId = x.UserId,
                 UserName = x.User.UserName,
+
                 Amount = x.Amount,
                 Status = x.PaymentStatus.ToString(),
-                TransactionId = x.StripeTransactionId,
-                PurchasedAt = x.PurchasedAt
+
+                RazorpayOrderId = x.RazorpayOrderId,
+
+                // Actual Payment property is RazorpayPaymentId
+                RazorpayPaymentId = x.RazorpayPaymentId ?? string.Empty,
+
+                // DTO uses CreatedAt.
+                // Payment entity uses PurchasedAt.
+                CreatedAt = x.PurchasedAt
             })
             .ToListAsync();
     }
@@ -194,10 +208,14 @@ public class AdminService : IAdminService
                 BlogId = x.BlogId,
                 UserId = x.UserId,
                 UserName = x.User.UserName,
+
                 Title = x.Title,
                 Excerpt = x.Excerpt,
-                Status = x.Status.ToString(),
-                Visibility = x.Visibility.ToString(),
+
+                // AdminBlogDto uses IsPublished.
+                // Blog entity uses Status.
+                IsPublished = x.Status == BlogStatus.Published,
+
                 CreatedAt = x.CreatedAt,
                 PublishedAt = x.PublishedAt
             })
@@ -221,13 +239,14 @@ public class AdminService : IAdminService
                 Excerpt = x.Excerpt,
                 Content = x.Content,
 
-                Status = x.Status.ToString(),
-                Visibility = x.Visibility.ToString(),
+                // Blog entity uses Status.
+                IsPublished = x.Status == BlogStatus.Published,
 
-                ViewsCount = x.ViewsCount,
-                LikesCount = x.LikesCount,
-                CommentsCount = x.CommentsCount,
-                RepostsCount = x.RepostsCount,
+                // DTO property -> Blog entity property
+                Views = x.ViewsCount,
+                Likes = x.LikesCount,
+                Comments = x.CommentsCount,
+                Reposts = x.RepostsCount,
 
                 CreatedAt = x.CreatedAt,
                 PublishedAt = x.PublishedAt
@@ -270,9 +289,13 @@ public class AdminService : IAdminService
                 Amount = x.Amount,
                 Status = x.PaymentStatus.ToString(),
 
-                TransactionId = x.StripeTransactionId,
+                RazorpayOrderId = x.RazorpayOrderId,
 
-                PurchasedAt = x.PurchasedAt
+                // Actual property name in Payment entity
+                RazorpayPaymentId = x.RazorpayPaymentId ?? string.Empty,
+
+                // AdminPaymentDto uses CreatedAt
+                CreatedAt = x.PurchasedAt
             })
             .ToListAsync();
     }
@@ -287,9 +310,11 @@ public class AdminService : IAdminService
         return await _context.DeletedAccounts
             .Select(x => new DeletedUserDto
             {
-                DeletedId = x.DeletedId,
+                // DeletedAccount entity uses DeletedId
+                // DTO uses DeletedAccountId
+                DeletedAccountId = x.DeletedId,
+
                 UserId = x.UserId,
-                UserName = x.UserName,
                 Email = x.Email,
                 Reason = x.Reason,
                 DeletedAt = x.DeletedAt
@@ -312,12 +337,11 @@ public class AdminService : IAdminService
                 UserId = x.UserId,
                 UserName = x.User.UserName,
 
-                Subject = x.Subject,
                 Message = x.Message,
-                Rating = x.Rating,
 
-                Status = x.Status.ToString(),
-                AdminResponse = x.AdminResponse,
+                // AdminFeedbackDto uses IsResolved.
+                // Feedback entity uses Status.
+                IsResolved = x.Status == FeedbackStatus.Resolved,
 
                 CreatedAt = x.CreatedAt
             })
@@ -360,10 +384,8 @@ public class AdminService : IAdminService
                 Description = x.Description,
 
                 Status = x.Status.ToString(),
-                AdminResponse = x.AdminResponse,
 
-                CreatedAt = x.CreatedAt,
-                ResolvedAt = x.ResolvedAt
+                CreatedAt = x.CreatedAt
             })
             .ToListAsync();
     }
@@ -392,7 +414,7 @@ public class AdminService : IAdminService
     // ============================================================
 
     public async Task<PlanResponseDto> CreatePlanAsync(
-    CreatePlanRequestDto dto)
+        CreatePlanRequestDto dto)
     {
         var plan = new Plan
         {
@@ -419,6 +441,7 @@ public class AdminService : IAdminService
             CreatedAt = plan.CreatedAt
         };
     }
+
 
     public async Task<PlanResponseDto?> UpdatePlanAsync(
         int planId,
@@ -458,10 +481,8 @@ public class AdminService : IAdminService
         if (plan == null)
             return false;
 
-        /*
-         * Soft-delete/deactivate is safer because Payment has
-         * a foreign key to Plan.
-         */
+        // Deactivate instead of deleting because
+        // Payment has a foreign key to Plan.
         plan.IsActive = false;
 
         await _context.SaveChangesAsync();
@@ -491,7 +512,6 @@ public class AdminService : IAdminService
                 ReportedByUserName = x.ReportedByUser.UserName,
 
                 Reason = x.Reason.ToString(),
-                Description = x.Description,
 
                 Status = x.ReportStatus.ToString(),
 
@@ -560,7 +580,7 @@ public class AdminService : IAdminService
                 .CountAsync(),
 
             TotalRevenue = await _context.Payments
-                .Where(x => x.PaymentStatus == PaymentStatus.Succeeded)
+                .Where(x => x.PaymentStatus == PaymentStatus.Completed)
                 .SumAsync(x => (decimal?)x.Amount) ?? 0
         };
     }

@@ -175,7 +175,6 @@ public class AdminController : ControllerBase
 
     // POST: /api/admin/plans
     [HttpPost("plans")]
-    [HttpPost("plans")]
     public async Task<IActionResult> CreatePlan(
     [FromBody] CreatePlanRequestDto dto)
     {

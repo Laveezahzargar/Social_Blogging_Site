@@ -32,44 +32,44 @@ public class PlansController : ControllerBase
         });
     }
 
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreatePlan([FromBody] CreatePlanRequestDto request)
-    {
-        var result = await _planService.CreatePlanAsync(request);
+    //[HttpPost]
+    //[Authorize(Roles = "Admin")]
+    //public async Task<IActionResult> CreatePlan([FromBody] CreatePlanRequestDto request)
+    //{
+    //    var result = await _planService.CreatePlanAsync(request);
 
-        return Ok(new ApiResponse<PlanResponseDto>
-        {
-            Success = true,
-            Message = "Plan created successfully.",
-            Data = result
-        });
-    }
+    //    return Ok(new ApiResponse<PlanResponseDto>
+    //    {
+    //        Success = true,
+    //        Message = "Plan created successfully.",
+    //        Data = result
+    //    });
+    //}
 
-    [HttpPut("{planId}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdatePlan(int planId,[FromBody] UpdatePlanRequestDto request)
-    {
-        var result = await _planService.UpdatePlanAsync(planId, request);
+    //[HttpPut("{planId}")]
+    //[Authorize(Roles = "Admin")]
+    //public async Task<IActionResult> UpdatePlan(int planId,[FromBody] UpdatePlanRequestDto request)
+    //{
+    //    var result = await _planService.UpdatePlanAsync(planId, request);
 
-        return Ok(new ApiResponse<PlanResponseDto>
-        {
-            Success = true,
-            Message = "Plan updated successfully.",
-            Data = result
-        });
-    }
+    //    return Ok(new ApiResponse<PlanResponseDto>
+    //    {
+    //        Success = true,
+    //        Message = "Plan updated successfully.",
+    //        Data = result
+    //    });
+    //}
 
-    [HttpDelete("{planId}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeletePlan(int planId)
-    {
-        await _planService.DeletePlanAsync(planId);
+    //[HttpDelete("{planId}")]
+    //[Authorize(Roles = "Admin")]
+    //public async Task<IActionResult> DeletePlan(int planId)
+    //{
+    //    await _planService.DeletePlanAsync(planId);
 
-        return Ok(new ApiResponse<object>
-        {
-            Success = true,
-            Message = "Plan deleted successfully."
-        });
-    }
+    //    return Ok(new ApiResponse<object>
+    //    {
+    //        Success = true,
+    //        Message = "Plan deleted successfully."
+    //    });
+    //}
 }
