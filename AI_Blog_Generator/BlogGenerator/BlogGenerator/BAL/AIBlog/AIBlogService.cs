@@ -84,8 +84,8 @@ public class AIBlogService : IAIBlogService
     Content = content,
     Excerpt = CreateExcerpt(content),
 
-    Tone = request.Tone,
-    Audience = request.Audience,
+    Tone = request.Tone.ToString(),
+    Audience = request.Audience.ToString(),
 
     WordCount = CountWords(content),
     CreditsUsed = creditsRequired,

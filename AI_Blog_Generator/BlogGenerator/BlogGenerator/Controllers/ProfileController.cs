@@ -9,7 +9,7 @@ namespace BlogGenerator.Controllers;
 
 [ApiController]
 [Route("api/v1/[Controller]")]
-[Authorize]
+[Authorize(Roles = "User")]
 public class ProfileController : ControllerBase
 {
     private readonly IProfileService _profileService;

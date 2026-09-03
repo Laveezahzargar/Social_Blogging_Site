@@ -9,11 +9,11 @@ public class GenerateBlogRequestDto
 
     public string Topic { get; set; } = string.Empty;
 
-    public string Audience { get; set; } = string.Empty;
+    public BlogAudience Audience { get; set; } 
 
-    public string Tone { get; set; } = string.Empty;
+    public BlogTone Tone { get; set; } 
 
-    public int WordCount { get; set; }
+    public BlogWordCount WordCount { get; set; }
 
     public BlogLanguage Language { get; set; } = BlogLanguage.English;
 }
