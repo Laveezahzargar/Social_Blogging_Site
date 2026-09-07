@@ -467,4 +467,7 @@ ehthumbs_vista.db
 # Windows shortcuts
 *.lnk
 
+
+appsettings.Development.json
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,dotnetcore,angular,react,aspnetcore,ionic3,java,macos,linux

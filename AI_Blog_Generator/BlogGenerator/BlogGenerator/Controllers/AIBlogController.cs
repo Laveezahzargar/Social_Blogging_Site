@@ -28,12 +28,19 @@ public class AIBlogController : ControllerBase
     public async Task<IActionResult> GenerateBlog(
         [FromBody] GenerateBlogRequestDto request)
     {
-        var userId = GetUserId();
+        try
+        {
+            var userId = GetUserId();
 
-        var result = await _aiBlogService
-            .GenerateBlogAsync(userId, request);
+            var result = await _aiBlogService
+                .GenerateBlogAsync(userId, request);
 
-        return Ok(result);
+            return Ok(result);
+        }
+        catch(Exception ex)
+        {
+            throw;
+        }
     }
 
     [HttpPost("{blogId}/regenerate")]
