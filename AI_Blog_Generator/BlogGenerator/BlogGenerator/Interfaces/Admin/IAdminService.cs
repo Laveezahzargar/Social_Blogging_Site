@@ -1,4 +1,5 @@
 using BlogGenerator.ServiceModels.v1;
+using BlogGenerator.ServiceModels.v1.Category;
 
 namespace BlogGenerator.Interfaces;
 
@@ -47,4 +48,7 @@ public interface IAdminService
 
     // Statistics
     Task<AdminStatisticsDto> GetStatisticsAsync();
+
+    Task<CategoryResponseDto> AddCategoryAsync(
+        CategoryRequestDto request);
 }

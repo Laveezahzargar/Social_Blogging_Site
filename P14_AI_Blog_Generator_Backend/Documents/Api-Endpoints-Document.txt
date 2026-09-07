@@ -150,6 +150,8 @@ GET	    /api/admin/reported-blogs	                  View all reported blogs pend
 PUT	    /api/admin/reported-blogs/{reportId}/resolve  Resolve a reported blog
 GET	    /api/admin/statistics	                  Get detailed platform analytics (users, blogs, views, likes, comments, payments, etc.)
 
+POST        /api/admin/categories                             Add Category
+
 
 11. Public Feed APIs:
 

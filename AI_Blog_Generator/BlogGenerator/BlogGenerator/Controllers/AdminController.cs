@@ -2,6 +2,7 @@ using BlogGenerator.ServiceModels.v1;
 using BlogGenerator.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using BlogGenerator.ServiceModels.v1.Category;
 
 namespace BlogGenerator.Controllers;
 
@@ -234,6 +235,16 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> GetStatistics()
     {
         var result = await _adminService.GetStatisticsAsync();
+
+        return Ok(result);
+    }
+
+    [HttpPost("category")]
+    public async Task<IActionResult> AddCategory(
+        [FromBody] CategoryRequestDto request)
+    {
+        var result = await _adminService
+            .AddCategoryAsync(request);
 
         return Ok(result);
     }

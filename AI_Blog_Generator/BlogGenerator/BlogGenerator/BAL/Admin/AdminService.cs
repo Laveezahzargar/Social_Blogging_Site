@@ -4,6 +4,8 @@ using BlogGenerator.Interfaces;
 using BlogGenerator.ServiceModels.v1;
 using Microsoft.EntityFrameworkCore;
 using BlogGenerator.DAL;
+using CategoryEntity = BlogGenerator.DomainModels.v1.Category;
+using BlogGenerator.ServiceModels.v1.Category;
 
 namespace BlogGenerator.BAL;
 
@@ -593,6 +595,46 @@ public class AdminService : IAdminService
             TotalRevenue = await _context.Payments
                 .Where(x => x.PaymentStatus == PaymentStatus.Completed)
                 .SumAsync(x => (decimal?)x.Amount) ?? 0
+        };
+    }
+
+    public async Task<CategoryResponseDto> AddCategoryAsync(
+        CategoryRequestDto request)
+    {
+        if (request == null)
+            throw new ArgumentNullException(nameof(request));
+
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ArgumentException("Category name is required.");
+
+        var categoryName = request.Name.Trim();
+
+        var categoryExists = await _context.Categories
+            .AnyAsync(x => x.Name == categoryName);
+
+        if (categoryExists)
+            throw new InvalidOperationException(
+                "Category already exists.");
+
+        var category = new CategoryEntity
+        {
+            Name = categoryName,
+            Description = request.Description?.Trim(),
+            Icon = request.Icon?.Trim(),
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _context.Categories.Add(category);
+
+        await _context.SaveChangesAsync();
+
+        return new CategoryResponseDto
+        {
+            CategoryId = category.CategoryId,
+            Name = category.Name,
+            Description = category.Description,
+            Icon = category.Icon,
+            CreatedAt = category.CreatedAt
         };
     }
 }
