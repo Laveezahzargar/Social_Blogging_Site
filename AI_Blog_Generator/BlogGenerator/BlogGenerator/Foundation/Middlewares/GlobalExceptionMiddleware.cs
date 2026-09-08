@@ -79,9 +79,6 @@ public class GlobalExceptionMiddleware
                     ? exception.Message
                     : "An unexpected error occurred.";
                 break;
-                _logger.LogError(ex,
-    "Unhandled exception. TraceId: {TraceId}",
-    context.TraceIdentifier);
         }
 
         context.Response.StatusCode = (int)statusCode;
