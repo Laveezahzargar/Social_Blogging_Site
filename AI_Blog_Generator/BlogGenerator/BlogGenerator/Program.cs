@@ -149,6 +149,23 @@ if (app.Environment.IsDevelopment())
 }
 app.MapGet("/status", () => "Social Blog Site is running");
 
+app.MapGet("/db-status", async (ApplicationDbContext db) =>
+{
+    try
+    {
+        var canConnect = await db.Database.CanConnectAsync();
+
+        return Results.Ok(new
+        {
+            DatabaseConnected = canConnect
+        });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message);
+    }
+});
+
 //app.UseHttpsRedirection();
 
 app.Use(async (context, next) =>
