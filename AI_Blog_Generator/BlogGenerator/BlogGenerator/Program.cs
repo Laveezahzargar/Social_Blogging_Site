@@ -147,6 +147,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.MapGet("/status", () => "Social Blog Site is running");
 
 //app.UseHttpsRedirection();
 
