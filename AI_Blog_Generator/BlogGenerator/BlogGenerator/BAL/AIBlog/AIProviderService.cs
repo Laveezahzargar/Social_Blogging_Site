@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using BlogGenerator.Interfaces;
+using System.Diagnostics;
 
 namespace BlogGenerator.BAL;
 
@@ -103,6 +104,12 @@ public class AIProviderService : IAIProviderService
         var apiKey = _configuration["Gemini:ApiKey"];
         var model = _configuration["Gemini:Model"];
 
+        _logger.LogInformation(
+       "Gemini request started. Model: {Model}, PromptLength: {PromptLength}, ApiKeyConfigured: {ApiKeyConfigured}",
+       model,
+       prompt.Length,
+       !string.IsNullOrWhiteSpace(apiKey));
+
         if (string.IsNullOrWhiteSpace(apiKey))
         {
             throw new InvalidOperationException(
@@ -148,40 +155,68 @@ public class AIProviderService : IAIProviderService
             Encoding.UTF8,
             "application/json");
 
-        var response = await _httpClient.SendAsync(request);
+        var stopwatch = Stopwatch.StartNew();
 
-        var responseContent =
-            await response.Content.ReadAsStringAsync();
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
+            _logger.LogInformation("Sending request to Gemini.");
+            var response = await _httpClient.SendAsync(request);
+
+            stopwatch.Stop();
+
+            var responseContent =
+                await response.Content.ReadAsStringAsync();
+
+            _logger.LogInformation(
+            "Gemini response received. Status: {StatusCode}, ElapsedMs: {ElapsedMs}",
+            response.StatusCode,
+            stopwatch.ElapsedMilliseconds);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError(
+                    "Gemini API request failed. Status: {StatusCode}, Response: {Response}",
+                    response.StatusCode,
+                    responseContent);
+
+                throw new HttpRequestException(
+                    $"Gemini API request failed: {response.StatusCode}. " +
+                    $"Details: {responseContent}");
+            }
+
+            using var document =
+                JsonDocument.Parse(responseContent);
+
+            var outputText = document.RootElement
+                .GetProperty("candidates")[0]
+                .GetProperty("content")
+                .GetProperty("parts")[0]
+                .GetProperty("text")
+                .GetString();
+
+            if (string.IsNullOrWhiteSpace(outputText))
+            {
+                throw new InvalidOperationException(
+                    "Gemini returned an empty response.");
+            }
+            _logger.LogInformation(
+               "Gemini request completed successfully. OutputLength: {OutputLength}, ElapsedMs: {ElapsedMs}",
+               outputText.Length,
+               stopwatch.ElapsedMilliseconds);
+
+            return outputText.Trim();
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
+
             _logger.LogError(
-                "Gemini API request failed. Status: {StatusCode}, Response: {Response}",
-                response.StatusCode,
-                responseContent);
+                ex,
+                "Gemini request exception after {ElapsedMs}ms.",
+                stopwatch.ElapsedMilliseconds);
 
-            throw new HttpRequestException(
-                $"Gemini API request failed: {response.StatusCode}. " +
-                $"Details: {responseContent}");
+            throw;
         }
-
-        using var document =
-            JsonDocument.Parse(responseContent);
-
-        var outputText = document.RootElement
-            .GetProperty("candidates")[0]
-            .GetProperty("content")
-            .GetProperty("parts")[0]
-            .GetProperty("text")
-            .GetString();
-
-        if (string.IsNullOrWhiteSpace(outputText))
-        {
-            throw new InvalidOperationException(
-                "Gemini returned an empty response.");
-        }
-
-        return outputText.Trim();
     }
 
     private async Task<string> GenerateImageRequestAsync(string prompt)
