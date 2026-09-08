@@ -75,7 +75,7 @@ public class GlobalExceptionMiddleware
 
             default:
                 statusCode = HttpStatusCode.InternalServerError;
-                message = _environment.IsDevelopment()
+                message = _environment.IsProduction()
                     ? exception.Message
                     : "An unexpected error occurred.";
                 break;
